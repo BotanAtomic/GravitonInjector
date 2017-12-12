@@ -4,10 +4,10 @@ package org.graviton.test.services;
 import org.graviton.injector.api.Execute;
 import org.graviton.injector.api.Inject;
 import org.graviton.test.messages.Email;
-import org.graviton.test.messages.Message;
+import org.graviton.test.messages.FacebookMessage;
 
 public class DefaultService {
-    @Inject private Message message;
+    @Inject private FacebookMessage message;
 
     @Inject("First") private Email firstEmail;
     @Inject("Second") private Email secondEmail;

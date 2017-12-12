@@ -49,7 +49,7 @@ public class Injector extends Binder {
     }
 
     private void injectDependencies() {
-        this.builders.stream().map(BindingBuilder::get).forEach(instance -> getFields(instance).stream().filter(field -> field.isAnnotationPresent(Inject.class))
+        this.builders.stream().map(BindingBuilder::get).filter(Objects::nonNull).forEach(instance -> getFields(instance).stream().filter(field -> field.isAnnotationPresent(Inject.class))
                 .forEach(field -> {
                     String name = field.getAnnotation(Inject.class).value();
                     field.setAccessible(true);
@@ -57,24 +57,13 @@ public class Injector extends Binder {
                 }));
 
 
-        this.builders.stream().map(BindingBuilder::get).forEach(instance -> getMethods(instance).stream().filter(method -> !method.getReturnType().getName().equals("void") && method.isAnnotationPresent(Provide.class))
+        this.builders.stream().map(BindingBuilder::get).filter(Objects::nonNull).forEach(instance -> getMethods(instance).stream().filter(method -> !method.getReturnType().getName().equals("void") && method.isAnnotationPresent(Provide.class))
                 .map(method -> invoke(method, instance)).filter(Objects::nonNull).forEach(object -> bind(object.getClass()).toInstance(object)));
 
-        this.builders.stream().map(BindingBuilder::get).forEach(instance -> getMethods(instance).stream().filter(method -> method.isAnnotationPresent(Execute.class))
+        this.builders.stream().map(BindingBuilder::get).filter(Objects::nonNull).forEach(instance -> getMethods(instance).stream().filter(method -> method.isAnnotationPresent(Execute.class))
                 .forEach(method -> invoke(method, instance)));
 
     }
 
-    public <T> T getInstance(Class<T> clazz) {
-        BindingBuilder bindingBuilder = builders.stream().filter(builder -> builder.abstractClass().equals(clazz)).findAny().orElse(null);
-        return (T) bindingBuilder.get();
-    }
-
-    public <T> T getInstance(Class<T> clazz, String name) {
-        BindingBuilder bindingBuilder = builders.stream().filter(builder -> builder.abstractClass().equals(clazz) &&
-                name == null || name.equals(builder.name())).findAny().orElse(null);
-
-        return (T) bindingBuilder.get();
-    }
 
 }

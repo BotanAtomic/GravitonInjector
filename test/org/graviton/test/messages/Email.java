@@ -1,5 +1,6 @@
 package org.graviton.test.messages;
 
+
 public class Email implements Message{
     private String content;
 

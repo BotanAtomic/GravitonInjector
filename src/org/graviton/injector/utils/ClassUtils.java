@@ -1,11 +1,18 @@
 package org.graviton.injector.utils;
 
+import org.graviton.injector.api.Inject;
+
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
 public class ClassUtils {
+
+    public static Constructor getCompatibleConstructor(List<Constructor> constructors) {
+        return constructors.stream().filter(constructor -> constructor.isAnnotationPresent(Inject.class)).findAny().orElse(null);
+    }
 
     public static List<Method> getMethods(Object clazz) {
         return Arrays.asList(clazz.getClass().getMethods());
