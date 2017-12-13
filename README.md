@@ -1,4 +1,4 @@
 # GravitonInjector
-Simple dependency injection
+Simple Java dependency injection
 
 
